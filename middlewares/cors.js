@@ -1,8 +1,9 @@
 const allowedCors = [
   'http://localhost:3000',
-  'http://localhost:27017',
-  'http://',
-  'https://',
+  'http://api.movies.bezrukov.nomoredomainsicu.ru',
+  'https://api.movies.bezrukov.nomoredomainsicu.ru',
+  'https://movies.bezrukov.nomoredomainsicu.ru',
+  'http://movies.bezrukov.nomoredomainsicu.ru',
 ];
 
 module.exports = (req, res, next) => {
