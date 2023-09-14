@@ -5,6 +5,5 @@ module.exports = function sendUser(res, data) {
   if (!data) {
     throw new NotFoundError(userNotFoundMessage);
   }
-
   res.status(OK_STATUS).send({ data });
 };
