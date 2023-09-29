@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const { ValidationError } = require('mongoose').Error;
 const User = require('../models/user');
 const {
-  CREATE_STATUS, UNIQUE_STATUS, incorrectDataMessage, exitMessage, emailBusyMessage,
+  UNIQUE_STATUS, incorrectDataMessage, exitMessage, emailBusyMessage,
 } = require('../utils/constants');
 const BadRequestError = require('../errors/BadRequestError');
 const ConflictError = require('../errors/ConflictError');
@@ -38,7 +38,6 @@ const getMe = async (req, res, next) => {
     next(err);
   }
 };
-
 const createUser = async (req, res, next) => {
   const {
     name,
@@ -52,7 +51,16 @@ const createUser = async (req, res, next) => {
       email,
       password: hash,
     });
-    res.status(CREATE_STATUS).send({ data: user });
+    const token = jwt.sign(
+      { _id: user._id },
+      NODE_ENV !== 'production' ? 'some-key' : JWT_SECRET,
+      { expiresIn: '7d' },
+    );
+    res.cookie('token', token, {
+      maxAge: 3600000 * 24 * 7,
+      httpOnly: true,
+      sameSite: true,
+    }).send({ email });
   } catch (err) {
     if (err.code === UNIQUE_STATUS) {
       next(new ConflictError(emailBusyMessage));
