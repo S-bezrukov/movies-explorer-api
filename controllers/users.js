@@ -9,7 +9,7 @@ const BadRequestError = require('../errors/BadRequestError');
 const ConflictError = require('../errors/ConflictError');
 const sendUser = require('../utils/sendUser');
 
-const { NODE_ENV, JWT_SECRET } = process.env;
+const { NODE_ENV, SECRET_KEY } = process.env;
 
 const updateData = async (req, res, next) => {
   try {
@@ -53,7 +53,7 @@ const createUser = async (req, res, next) => {
     });
     const token = jwt.sign(
       { _id: user._id },
-      NODE_ENV !== 'production' ? 'some-key' : JWT_SECRET,
+      NODE_ENV !== 'production' ? 'some-key' : SECRET_KEY,
       { expiresIn: '7d' },
     );
     res.cookie('token', token, {
@@ -80,7 +80,7 @@ const login = async (req, res, next) => {
     const user = await User.findUserByCredentials(email, password);
     const token = jwt.sign(
       { _id: user._id },
-      NODE_ENV !== 'production' ? 'some-key' : JWT_SECRET,
+      NODE_ENV !== 'production' ? 'some-key' : SECRET_KEY,
       { expiresIn: '7d' },
     );
     res.cookie('token', token, {
